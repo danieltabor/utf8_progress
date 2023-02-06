@@ -69,10 +69,31 @@ typedef struct {
 	utf8_progress_range_t range;
 } utf8_progress_t;
 
+/* Initialize progress bar
+ * progress_type is one of: UTF8_PROGRESS_TYPE_...
+ * size is the number of characters wide the progress bar will be
+ */
 int utf8_progress_init(utf8_progress_t* progress, uint8_t progress_type, uint16_t size);
+
+/* Set the range of the progress bar
+ * By default, the range is 0-size
+ */
 int utf8_progress_set_range(utf8_progress_t* progress, uint32_t min, uint32_t max);
+
+/* Set the colors to use when rendering the progress bar
+ * By default, colors are disabled.
+ * fgcolor and bgcolor must be 0-15.
+ */
 int utf8_progress_set_colors(utf8_progress_t* progress, uint8_t fgcolor, uint8_t bgcolor);
+
+/* Set the output FILE pointer to use when rendering.
+ * By default, stdout is used.
+ */
 void utf8_progress_set_output(utf8_progress_t* progress, FILE* fp);
+
+/* Render the progress bar at the current cursor position.
+ * value is the current value of the progress (typically between the min and max of the range)
+ */
 void utf8_progress_render(utf8_progress_t* progress, uint32_t value);
 
 #endif //__UTF8_PROGRESS_H__
