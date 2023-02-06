@@ -26,7 +26,9 @@ int main() {
 	utf8_progress_set_range(p+3, 0, 200);
 	utf8_progress_set_colors(p+3, 12, 0);
 	
-	//Increment and render each progress bar forever
+	//Increment and render each progress bar
+	//Some will render prior to their minimum being reached
+	//All will render past their maximum being reached
 	for(pv=0; pv<210; pv++) {
 		for( i=0; i<4; i++ ) {
 			printf("%03" PRId32 "/%03" PRId32 "/%03" PRId32 " (",p[i].range.min,pv,p[i].range.max);
