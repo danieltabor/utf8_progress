@@ -27,15 +27,18 @@
 import sys
 
 class Progress:
-	PROGRESS_TYPE_BLOCK=0
-	PROGRESS_TYPE_BAR=1
-	PROGRESS_TYPE_PIE=2
-	PROGRESS_TYPE_FALLING=3
+	PROGRESS_TYPE_ASCII=0
+	PROGRESS_TYPE_BLOCK=1
+	PROGRESS_TYPE_BAR=2
+	PROGRESS_TYPE_FADE=3
+	PROGRESS_TYPE_PIE=4
+	PROGRESS_TYPE_FALLING=5
 	
 	_fgcolors = [30, 31, 32, 33, 34, 35, 36, 37,  90,  91,  92,  93,  94,  95,  96,  97]
 	_bgcolors = [40, 41, 42, 43, 44, 45, 46, 47, 100, 101, 102, 103, 104, 105, 106, 107]
 
 	_progress_tiles = [
+		[" ","/","-","\\","|","#"],
 		[bytes([0x20]).decode(),           # 0x00020
 		 bytes([0xE2,0x96,0x8F]).decode(), # 0x0258F
 		 bytes([0xE2,0x96,0x8E]).decode(), # 0x0258E
@@ -54,6 +57,12 @@ class Progress:
 		 bytes([0xE2,0x96,0x85]).decode(), # 0x02585
 		 bytes([0xE2,0x96,0x86]).decode(), # 0x02586
 		 bytes([0xE2,0x96,0x87]).decode(), # 0x02587
+		 bytes([0xE2,0x96,0x88]).decode(), # 0x02588
+		],
+		[bytes([0x20]).decode(),          # 0x00020
+		 bytes([0xE2,0x96,0x91]).decode(), # 0x02591
+		 bytes([0xE2,0x96,0x92]).decode(), # 0x02592
+		 bytes([0xE2,0x96,0x93]).decode(), # 0x02593
 		 bytes([0xE2,0x96,0x88]).decode(), # 0x02588
 		],
 		[bytes([0xE2,0x97,0x8B]).decode(), # 0x025CB
@@ -93,7 +102,7 @@ class Progress:
 		self._size = size
 		self._fp = sys.stdout
 		self._min = 0
-		self._max = size
+		self._max = size*(len(self._tiles)-1)
 
 	def set_range(self, minimum, maximum):
 		minimum = int(minimum)
@@ -155,15 +164,25 @@ if __name__ == "__main__":
 	progress_bars = []
 	
 	# Initialize 4 progress bars
+	p = Progress(Progress.PROGRESS_TYPE_ASCII, 12)
+	p.set_range( 0, 100 )
+	progress_bars.append(p)
+	
 	p = Progress(Progress.PROGRESS_TYPE_BLOCK, 20)
 	p.set_range( 0, 100 )
+	p.set_colors( 2, 0 )
 	progress_bars.append(p)
 		
 	p = Progress(Progress.PROGRESS_TYPE_BAR, 15)
 	p.set_range( 50, 150 )
 	p.set_colors( 9, 15 )
 	progress_bars.append(p)
-		
+
+	p = Progress(Progress.PROGRESS_TYPE_FADE, 7)
+	p.set_range( 100, 200 )
+	p.set_colors( 11, 0 )
+	progress_bars.append(p)
+
 	p = Progress(Progress.PROGRESS_TYPE_PIE, 5)
 	p.set_range( 100, 200 )
 	p.set_colors( 0, 11 )
@@ -184,6 +203,6 @@ if __name__ == "__main__":
 			sys.stdout.write(")\n")
 		sys.stdout.flush()
 		time.sleep(0.1)
-		sys.stdout.write(bytes([0x1b,0x5b,0x34,0x41]).decode())
-	sys.stdout.write(bytes([0x1b,0x5b,0x34,0x42]).decode())
+		sys.stdout.write(bytes([0x1b,0x5b,0x36,0x41]).decode())
+	sys.stdout.write(bytes([0x1b,0x5b,0x36,0x42]).decode())
 	

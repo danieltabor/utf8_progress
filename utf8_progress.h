@@ -40,10 +40,12 @@
 #include <stdint.h>
 #include <stdio.h>
 
-#define UTF8_PROGRESS_TYPE_BLOCK   0
-#define UTF8_PROGRESS_TYPE_BAR     1
-#define UTF8_PROGRESS_TYPE_PIE     2
-#define UTF8_PROGRESS_TYPE_FALLING 3
+#define UTF8_PROGRESS_TYPE_ASCII   0
+#define UTF8_PROGRESS_TYPE_BLOCK   1
+#define UTF8_PROGRESS_TYPE_BAR     2
+#define UTF8_PROGRESS_TYPE_FADE    3
+#define UTF8_PROGRESS_TYPE_PIE     4
+#define UTF8_PROGRESS_TYPE_FALLING 5
 
 typedef struct {
 	uint8_t chars_len;
@@ -100,7 +102,9 @@ void utf8_progress_render(utf8_progress_t* progress, uint32_t value);
 
 #ifdef UTF8_PROGRESS_IMPLEMENTATION
 
-static char* utf8_progress_tiles_0[9] = {
+static char* utf8_progress_tiles_0[6] = {
+	" ","/","-","\\","|","#"};
+static char* utf8_progress_tiles_1[9] = {
 	"\x20"         /*0x00020*/,
 	"\xE2\x96\x8F" /*0x0258F*/,
 	"\xE2\x96\x8E" /*0x0258E*/,
@@ -110,7 +114,7 @@ static char* utf8_progress_tiles_0[9] = {
 	"\xE2\x96\x8A" /*0x0258A*/,
 	"\xE2\x96\x89" /*0x02589*/,
 	"\xE2\x96\x88" /*0x02588*/ };
-static char* utf8_progress_tiles_1[9] = {
+static char* utf8_progress_tiles_2[9] = {
 	"\x20"         /*0x00020*/,
 	"\xE2\x96\x81" /*0x02581*/,
 	"\xE2\x96\x82" /*0x02582*/,
@@ -120,13 +124,19 @@ static char* utf8_progress_tiles_1[9] = {
 	"\xE2\x96\x86" /*0x02586*/,
 	"\xE2\x96\x87" /*0x02587*/,
 	"\xE2\x96\x88" /*0x02588*/ };
-static char* utf8_progress_tiles_2[5] = {
+static char* utf8_progress_tiles_3[5] = {
+	"\x20"         /*0x00020*/,
+	"\xE2\x96\x91" /*0x02591*/,
+	"\xE2\x96\x92" /*0x02592*/,
+	"\xE2\x96\x93" /*0x02593*/,
+	"\xE2\x96\x88" /*0x02588*/ };
+static char* utf8_progress_tiles_4[5] = {
 	"\xE2\x97\x8B" /*0x025CB*/,
 	"\xE2\x97\x94" /*0x025D4*/,
 	"\xE2\x97\x91" /*0x025D1*/,
 	"\xE2\x97\x95" /*0x025D5*/,
 	"\xE2\x97\x8F" /*0x025CF*/ };
-static char* utf8_progress_tiles_3[13] = { 
+static char* utf8_progress_tiles_5[13] = { 
 	"\x20"             /*0x00020*/,
 	"\xF0\x9F\xAC\x80" /*0x1FB00*/,
 	"\xF0\x9F\xAC\x83" /*0x1FB03*/,
@@ -141,11 +151,13 @@ static char* utf8_progress_tiles_3[13] = {
 	"\xF0\x9F\xAC\xBA" /*0x1FB3A*/,
 	"\xE2\x96\x88"     /*0x02588*/ };
 
-static utf8_progress_type_t utf8_progress_types[4] = {
-	{ 9, utf8_progress_tiles_0},
+static utf8_progress_type_t utf8_progress_types[6] = {
+	{ 6, utf8_progress_tiles_0},
 	{ 9, utf8_progress_tiles_1},
-	{ 5, utf8_progress_tiles_2},
-	{13, utf8_progress_tiles_3},
+	{ 9, utf8_progress_tiles_2},
+	{ 5, utf8_progress_tiles_3},
+	{ 5, utf8_progress_tiles_4},
+	{13, utf8_progress_tiles_5},
 };
 
 static uint8_t utf8_fgcolors[16] = {30, 31, 32, 33, 34, 35, 36, 37,  90,  91,  92,  93,  94,  95,  96,  97};
@@ -153,7 +165,7 @@ static uint8_t utf8_bgcolors[16] = {40, 41, 42, 43, 44, 45, 46, 47, 100, 101, 10
 
 int utf8_progress_init(utf8_progress_t* progress, uint8_t progress_type, uint16_t size) {
 	if( ! progress ) { return -1; }
-	if( progress_type > 3 ) { return -1; }
+	if( progress_type > 5 ) { return -1; }
 	if( size == 0 ) { return -1; }
 	progress->type = &(utf8_progress_types[progress_type]);
 	progress->color.use = 0;
