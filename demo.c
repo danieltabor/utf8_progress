@@ -9,6 +9,7 @@ int main() {
 	utf8_progress_t p[6];
 	uint32_t pv;
 	uint8_t i;
+	char frame;
 	
 	//Initialize 5 progress bars
 	utf8_progress_init(p+0, UTF8_PROGRESS_TYPE_ASCII, 12);
@@ -41,9 +42,15 @@ int main() {
 	//All will render past their maximum being reached
 	for(pv=0; pv<210; pv++) {
 		for( i=0; i<6; i++ ) {
-			printf("%03" PRId32 "/%03" PRId32 "/%03" PRId32 " (",p[i].range.min,pv,p[i].range.max);
+			if( ! p[i].invert ) {
+				frame = '>';
+			}
+			else {
+				frame = '<';
+			}
+			printf("%03" PRId32 "/%03" PRId32 "/%03" PRId32 " %c",p[i].range.min,pv,p[i].range.max,frame);
 			utf8_progress_render(p+i,pv);
-			printf(")\n");
+			printf("%c\n",frame);
 		}
 		fflush(0);
 		usleep(100000);
