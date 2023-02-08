@@ -38,71 +38,129 @@ class Progress:
 	_bgcolors = [40, 41, 42, 43, 44, 45, 46, 47, 100, 101, 102, 103, 104, 105, 106, 107]
 
 	_progress_tiles = [
-		[" ","/","-","\\","|","#"],
-		[bytes([0x20]).decode(),           # 0x00020
-		 bytes([0xE2,0x96,0x8F]).decode(), # 0x0258F
-		 bytes([0xE2,0x96,0x8E]).decode(), # 0x0258E
-		 bytes([0xE2,0x96,0x8D]).decode(), # 0x0258D
-		 bytes([0xE2,0x96,0x8C]).decode(), # 0x0258C
-		 bytes([0xE2,0x96,0x8B]).decode(), # 0x0258B
-		 bytes([0xE2,0x96,0x8A]).decode(), # 0x0258A
-		 bytes([0xE2,0x96,0x89]).decode(), # 0x02589
-		 bytes([0xE2,0x96,0x88]).decode(), # 0x02588
-		],
-		[bytes([0x20]).decode(),           # 0x00020
-		 bytes([0xE2,0x96,0x81]).decode(), # 0x02581
-		 bytes([0xE2,0x96,0x82]).decode(), # 0x02582
-		 bytes([0xE2,0x96,0x83]).decode(), # 0x02583
-		 bytes([0xE2,0x96,0x84]).decode(), # 0x02584
-		 bytes([0xE2,0x96,0x85]).decode(), # 0x02585
-		 bytes([0xE2,0x96,0x86]).decode(), # 0x02586
-		 bytes([0xE2,0x96,0x87]).decode(), # 0x02587
-		 bytes([0xE2,0x96,0x88]).decode(), # 0x02588
-		],
-		[bytes([0x20]).decode(),          # 0x00020
-		 bytes([0xE2,0x96,0x91]).decode(), # 0x02591
-		 bytes([0xE2,0x96,0x92]).decode(), # 0x02592
-		 bytes([0xE2,0x96,0x93]).decode(), # 0x02593
-		 bytes([0xE2,0x96,0x88]).decode(), # 0x02588
-		],
-		[bytes([0xE2,0x97,0x8B]).decode(), # 0x025CB
-		 bytes([0xE2,0x97,0x94]).decode(), # 0x025D4
-		 bytes([0xE2,0x97,0x91]).decode(), # 0x025D1
-		 bytes([0xE2,0x97,0x95]).decode(), # 0x025D5
-		 bytes([0xE2,0x97,0x8F]).decode(), # 0x025CF
-		],
-		[bytes([0x20]).decode(),                # 0x00020
-		 bytes([0xF0,0x9F,0xAC,0x80]).decode(), # 0x1FB00
-		 bytes([0xF0,0x9F,0xAC,0x83]).decode(), # 0x1FB03
-		 bytes([0xF0,0x9F,0xAC,0x8F]).decode(), # 0x1FB0F
-		 bytes([0xF0,0x9F,0xAC,0x90]).decode(), # 0x1FB10
-		 bytes([0xF0,0x9F,0xAC,0x93]).decode(), # 0x1FB13
-		 bytes([0xE2,0x96,0x8C]).decode(),      # 0x0258C
-		 bytes([0xF0,0x9F,0xAC,0x95]).decode(), # 0x1FB15
-		 bytes([0xF0,0x9F,0xAC,0x9B]).decode(), # 0x1FB1B
-		 bytes([0xF0,0x9F,0xAC,0xB2]).decode(), # 0x1FB32
-		 bytes([0xF0,0x9F,0xAC,0xB4]).decode(), # 0x1FB34
-		 bytes([0xF0,0x9F,0xAC,0xBA]).decode(), # 0x1FB3A
-		 bytes([0xE2,0x96,0x88]).decode(),      # 0x02588
-		]
+		[False,[" ","/","-","\\","|","#"]],
+		[False,[" ","\\","-","/","|","#"]],
+		[False,[
+			bytes([0x20]).decode(),           # 0x00020
+			bytes([0xE2,0x96,0x8F]).decode(), # 0x0258F
+			bytes([0xE2,0x96,0x8E]).decode(), # 0x0258E
+			bytes([0xE2,0x96,0x8D]).decode(), # 0x0258D
+			bytes([0xE2,0x96,0x8C]).decode(), # 0x0258C
+			bytes([0xE2,0x96,0x8B]).decode(), # 0x0258B
+			bytes([0xE2,0x96,0x8A]).decode(), # 0x0258A
+			bytes([0xE2,0x96,0x89]).decode(), # 0x02589
+			bytes([0xE2,0x96,0x88]).decode(), # 0x02588
+		]],
+		[True,[
+			bytes([0xE2,0x96,0x88]).decode(), # 0x02588
+			bytes([0xE2,0x96,0x89]).decode(), # 0x02589
+			bytes([0xE2,0x96,0x8A]).decode(), # 0x0258A
+			bytes([0xE2,0x96,0x8B]).decode(), # 0x0258B
+			bytes([0xE2,0x96,0x8C]).decode(), # 0x0258C
+			bytes([0xE2,0x96,0x8D]).decode(), # 0x0258D
+			bytes([0xE2,0x96,0x8E]).decode(), # 0x0258E
+			bytes([0xE2,0x96,0x8F]).decode(), # 0x0258F
+			bytes([0x20]).decode(),           # 0x00020
+		]],
+		[False,[
+			bytes([0x20]).decode(),           # 0x00020
+			bytes([0xE2,0x96,0x81]).decode(), # 0x02581
+			bytes([0xE2,0x96,0x82]).decode(), # 0x02582
+			bytes([0xE2,0x96,0x83]).decode(), # 0x02583
+			bytes([0xE2,0x96,0x84]).decode(), # 0x02584
+			bytes([0xE2,0x96,0x85]).decode(), # 0x02585
+			bytes([0xE2,0x96,0x86]).decode(), # 0x02586
+			bytes([0xE2,0x96,0x87]).decode(), # 0x02587
+			bytes([0xE2,0x96,0x88]).decode(), # 0x02588
+		]],
+		[False,[
+			bytes([0x20]).decode(),           # 0x00020
+			bytes([0xE2,0x96,0x81]).decode(), # 0x02581
+			bytes([0xE2,0x96,0x82]).decode(), # 0x02582
+			bytes([0xE2,0x96,0x83]).decode(), # 0x02583
+			bytes([0xE2,0x96,0x84]).decode(), # 0x02584
+			bytes([0xE2,0x96,0x85]).decode(), # 0x02585
+			bytes([0xE2,0x96,0x86]).decode(), # 0x02586
+			bytes([0xE2,0x96,0x87]).decode(), # 0x02587
+			bytes([0xE2,0x96,0x88]).decode(), # 0x02588
+		]],
+		[False,[
+			bytes([0x20]).decode(),          # 0x00020
+			bytes([0xE2,0x96,0x91]).decode(), # 0x02591
+			bytes([0xE2,0x96,0x92]).decode(), # 0x02592
+			bytes([0xE2,0x96,0x93]).decode(), # 0x02593
+			bytes([0xE2,0x96,0x88]).decode(), # 0x02588
+		]],
+		[False,[
+			bytes([0x20]).decode(),          # 0x00020
+			bytes([0xE2,0x96,0x91]).decode(), # 0x02591
+			bytes([0xE2,0x96,0x92]).decode(), # 0x02592
+			bytes([0xE2,0x96,0x93]).decode(), # 0x02593
+			bytes([0xE2,0x96,0x88]).decode(), # 0x02588
+		]],
+		[False,[
+			bytes([0xE2,0x97,0x8B]).decode(), # 0x025CB
+			bytes([0xE2,0x97,0x94]).decode(), # 0x025D4
+			bytes([0xE2,0x97,0x91]).decode(), # 0x025D1
+			bytes([0xE2,0x97,0x95]).decode(), # 0x025D5
+			bytes([0xE2,0x97,0x8F]).decode(), # 0x025CF
+		]],
+		[True,[
+			bytes([0xE2,0x97,0x8F]).decode(), # 0x025CF
+			bytes([0xE2,0x97,0x95]).decode(), # 0x025D5
+			bytes([0xE2,0x97,0x91]).decode(), # 0x025D1
+			bytes([0xE2,0x97,0x94]).decode(), # 0x025D4
+			bytes([0xE2,0x97,0x8B]).decode(), # 0x025CB
+		]],
+		[False,[
+			bytes([0x20]).decode(),                # 0x00020
+			bytes([0xF0,0x9F,0xAC,0x80]).decode(), # 0x1FB00
+			bytes([0xF0,0x9F,0xAC,0x83]).decode(), # 0x1FB03
+			bytes([0xF0,0x9F,0xAC,0x8F]).decode(), # 0x1FB0F
+			bytes([0xF0,0x9F,0xAC,0x90]).decode(), # 0x1FB10
+			bytes([0xF0,0x9F,0xAC,0x93]).decode(), # 0x1FB13
+			bytes([0xE2,0x96,0x8C]).decode(),      # 0x0258C
+			bytes([0xF0,0x9F,0xAC,0x95]).decode(), # 0x1FB15
+			bytes([0xF0,0x9F,0xAC,0x9B]).decode(), # 0x1FB1B
+			bytes([0xF0,0x9F,0xAC,0xB2]).decode(), # 0x1FB32
+			bytes([0xF0,0x9F,0xAC,0xB4]).decode(), # 0x1FB34
+			bytes([0xF0,0x9F,0xAC,0xBA]).decode(), # 0x1FB3A
+			bytes([0xE2,0x96,0x88]).decode(),      # 0x02588
+		]],
+		[False,[
+			bytes([0x20]).decode(),                # 0x00020
+			bytes([0xF0,0x9F,0xAC,0x81]).decode(), # 0x1FB01
+			bytes([0xF0,0x9F,0xAC,0x87]).decode(), # 0x1FB07
+			bytes([0xF0,0x9F,0xAC,0x9E]).decode(), # 0x1FB1E
+			bytes([0xF0,0x9F,0xAC,0xA0]).decode(), # 0x1FB20
+			bytes([0xF0,0x9F,0xAC,0xA6]).decode(), # 0x1FB26
+			bytes([0xe2,0x96,0x90]).decode(),      # 0x02590
+			bytes([0xF0,0x9F,0xAC,0xA8]).decode(), # 0x1FB28
+			bytes([0xF0,0x9F,0xAC,0xAB]).decode(), # 0x1FB2B
+			bytes([0xF0,0x9F,0xAC,0xB7]).decode(), # 0x1FB37
+			bytes([0xF0,0x9F,0xAC,0xB8]).decode(), # 0x1FB38
+			bytes([0xF0,0x9F,0xAC,0xBB]).decode(), # 0x1FB3B
+			bytes([0xE2,0x96,0x88]).decode(),      # 0x02588
+		]],
 	]
 	
 	def __init__(self, progress_type, size):
 		progress_type = int(progress_type)
-		if progress_type < 0 or progress_type > len(self._progress_tiles):
+		if progress_type < 0 or progress_type > int(len(self._progress_tiles)/2):
 			raise ValueError("progress_type must be Progress.PROGRESS_TYPE_...")
 		size = int(size)
 		if size <= 0:
 			raise ValueError("size must be greater than 0")
-
-		self._tiles = self._progress_tiles[progress_type]
+		
+		self._type = progress_type
 		self._use_color = False
+		self._invert = 0
+		self._size = size
 		self._fg = 0
 		self._bg = 0
-		self._size = size
 		self._fp = sys.stdout
 		self._min = 0
-		self._max = size*(len(self._tiles)-1)
+		self._max = 100
 
 	def set_range(self, minimum, maximum):
 		minimum = int(minimum)
@@ -122,18 +180,21 @@ class Progress:
 		if bgcolor < 0 or bgcolor > 15:
 			raise ValueError("Background color must be 0-15")
 		self._use_color = True
-		self._fg = self._fgcolors[fgcolor]
-		self._bg = self._bgcolors[bgcolor]
+		self._fg = fgcolor
+		self._bg = bgcolor
+
+	def invert(self):
+		self._invert = 1 - self._invert
 
 	def set_output(self, fp):
 		self._fp = fp
-		
+
 	def render(self, value):
 		value = int(value)
-		units_per_char = len(self._tiles)-1
-		full_char = self._tiles[-1]
-		empty_char = self._tiles[0]
-
+		invert_colors, tiles = self._progress_tiles[2*self._type+self._invert]
+		units_per_char = len(tiles)-1
+		
+		
 		if value < self._min:
 			units = 0
 		elif value > self._max:
@@ -143,15 +204,29 @@ class Progress:
 		units = int(units)
 
 		if self._use_color:
-			self._fp.write(bytes([0x1b,0x5b]).decode() + ("%d;%dm" % (self._fg,self._bg)))
-		for i in range(self._size):
-			if units >= (i+1)*units_per_char:
-				c = full_char
-			elif units < i*units_per_char:
-				c = empty_char
+			if not invert_colors:
+				self._fp.write(bytes([0x1b,0x5b]).decode() + ("%d;%dm" % (self._fgcolors[self._fg],self._bgcolors[self._bg])))
 			else:
-				c = self._tiles[units%units_per_char]
-			self._fp.write(c)
+				self._fp.write(bytes([0x1b,0x5b]).decode() + ("%d;%dm" % (self._fgcolors[self._bg],self._bgcolors[self._fg])))
+
+		if not self._invert:
+			for i in range(self._size):
+				if units >= (i+1)*units_per_char:
+					c = tiles[-1]
+				elif units < i*units_per_char:
+					c = tiles[0]
+				else:
+					c = tiles[units%units_per_char]
+				self._fp.write(c)
+		else:
+			for i in range(self._size):
+				if units >= (self._size-i)*units_per_char:
+					c = tiles[-1]
+				elif units < (self._size-i-1)*units_per_char:
+					c = tiles[0]
+				else:
+					c = tiles[units%units_per_char]
+				self._fp.write(c)
 		
 		if self._use_color:
 			self._fp.write(bytes([0x1b,0x5b,0x30,0x6d]).decode())
@@ -176,6 +251,7 @@ if __name__ == "__main__":
 	p = Progress(Progress.PROGRESS_TYPE_BAR, 15)
 	p.set_range( 50, 150 )
 	p.set_colors( 9, 15 )
+	p.invert()
 	progress_bars.append(p)
 
 	p = Progress(Progress.PROGRESS_TYPE_FADE, 7)
@@ -186,6 +262,7 @@ if __name__ == "__main__":
 	p = Progress(Progress.PROGRESS_TYPE_PIE, 5)
 	p.set_range( 100, 200 )
 	p.set_colors( 0, 11 )
+	p.invert()
 	progress_bars.append(p)
 	
 	p = Progress(Progress.PROGRESS_TYPE_FALLING, 10)
@@ -198,9 +275,13 @@ if __name__ == "__main__":
 	# All will render past their maximum being reached
 	for pv in range(210):
 		for p in progress_bars:
-			sys.stdout.write("%03d/%03d/%03d (" % (p._min,pv,p._max))
+			if not p._invert:
+				frame = ">"
+			else:
+				frame = "<"
+			sys.stdout.write("%03d/%03d/%03d %s" % (p._min,pv,p._max,frame))
 			p.render(pv)
-			sys.stdout.write(")\n")
+			sys.stdout.write("%s\n" % frame)
 		sys.stdout.flush()
 		time.sleep(0.1)
 		sys.stdout.write(bytes([0x1b,0x5b,0x36,0x41]).decode())
