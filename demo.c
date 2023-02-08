@@ -21,6 +21,7 @@ int main() {
 	utf8_progress_init(p+2, UTF8_PROGRESS_TYPE_BAR, 15);
 	utf8_progress_set_range(p+2, 50, 150);
 	utf8_progress_set_colors(p+2, 9, 15);
+	utf8_progress_invert(p+2);
 	
 	utf8_progress_init(p+3, UTF8_PROGRESS_TYPE_FADE, 7);
 	utf8_progress_set_range(p+3, 100, 200);
@@ -29,6 +30,7 @@ int main() {
 	utf8_progress_init(p+4, UTF8_PROGRESS_TYPE_PIE, 5);
 	utf8_progress_set_range(p+4, 100, 200);
 	utf8_progress_set_colors(p+4, 0, 11);
+	utf8_progress_invert(p+4);
 	
 	utf8_progress_init(p+5, UTF8_PROGRESS_TYPE_FALLING, 10);
 	utf8_progress_set_range(p+5, 0, 200);

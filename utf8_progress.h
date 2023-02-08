@@ -48,11 +48,6 @@
 #define UTF8_PROGRESS_TYPE_FALLING 5
 
 typedef struct {
-	uint8_t chars_len;
-	char **chars;
-} utf8_progress_type_t;
-
-typedef struct {
 	uint8_t use;
 	uint8_t fg;
 	uint8_t bg;
@@ -64,9 +59,10 @@ typedef struct {
 } utf8_progress_range_t;
 
 typedef struct {
-	utf8_progress_type_t *type;
-	utf8_progress_color_t color;
+	uint8_t type;
+	uint8_t invert;
 	uint16_t size;
+	utf8_progress_color_t color;
 	FILE* fp;
 	utf8_progress_range_t range;
 } utf8_progress_t;
@@ -104,6 +100,8 @@ void utf8_progress_render(utf8_progress_t* progress, uint32_t value);
 
 static char* utf8_progress_tiles_0[6] = {
 	" ","/","-","\\","|","#"};
+static char* utf8_progress_tiles_0i[6] = {
+	" ","\\","-","/","|","#"};
 static char* utf8_progress_tiles_1[9] = {
 	"\x20"         /*0x00020*/,
 	"\xE2\x96\x8F" /*0x0258F*/,
@@ -114,6 +112,16 @@ static char* utf8_progress_tiles_1[9] = {
 	"\xE2\x96\x8A" /*0x0258A*/,
 	"\xE2\x96\x89" /*0x02589*/,
 	"\xE2\x96\x88" /*0x02588*/ };
+static char* utf8_progress_tiles_1i[9] = {
+	"\xE2\x96\x88" /*0x02588*/,
+	"\xE2\x96\x89" /*0x02589*/,
+	"\xE2\x96\x8A" /*0x0258A*/,
+	"\xE2\x96\x8B" /*0x0258B*/,
+	"\xE2\x96\x8C" /*0x0258C*/,
+	"\xE2\x96\x8D" /*0x0258D*/,
+	"\xE2\x96\x8E" /*0x0258E*/,
+	"\xE2\x96\x8F" /*0x0258F*/,
+	"\x20"         /*0x00020*/ };
 static char* utf8_progress_tiles_2[9] = {
 	"\x20"         /*0x00020*/,
 	"\xE2\x96\x81" /*0x02581*/,
@@ -136,6 +144,12 @@ static char* utf8_progress_tiles_4[5] = {
 	"\xE2\x97\x91" /*0x025D1*/,
 	"\xE2\x97\x95" /*0x025D5*/,
 	"\xE2\x97\x8F" /*0x025CF*/ };
+static char* utf8_progress_tiles_4i[5] = {
+	"\xE2\x97\x8F" /*0x025CF*/,
+	"\xE2\x97\x95" /*0x025D5*/,
+	"\xE2\x97\x91" /*0x025D1*/,
+	"\xE2\x97\x94" /*0x025D4*/,
+	"\xE2\x97\x8B" /*0x025CB*/};
 static char* utf8_progress_tiles_5[13] = { 
 	"\x20"             /*0x00020*/,
 	"\xF0\x9F\xAC\x80" /*0x1FB00*/,
@@ -150,14 +164,34 @@ static char* utf8_progress_tiles_5[13] = {
 	"\xF0\x9F\xAC\xB4" /*0x1FB34*/,
 	"\xF0\x9F\xAC\xBA" /*0x1FB3A*/,
 	"\xE2\x96\x88"     /*0x02588*/ };
+static char* utf8_progress_tiles_5i[13] = { 
+	"\x20"             /*0x00020*/,
+	"\xF0\x9F\xAC\x81" /*0x1FB01*/,
+	"\xF0\x9F\xAC\x87" /*0x1FB07*/,
+	"\xF0\x9F\xAC\x9E" /*0x1FB1E*/,
+	"\xF0\x9F\xAC\xA0" /*0x1FB20*/,
+	"\xF0\x9F\xAC\xA6" /*0x1FB26*/,
+	"\xe2\x96\x90"     /*0x02590*/,
+	"\xF0\x9F\xAC\xA8" /*0x1FB28*/,
+	"\xF0\x9F\xAC\xAB" /*0x1FB2B*/,
+	"\xF0\x9F\xAC\xB7" /*0x1FB37*/,
+	"\xF0\x9F\xAC\xB8" /*0x1FB38*/,
+	"\xF0\x9F\xAC\xBB" /*0x1FB3B*/,
+	"\xE2\x96\x88"     /*0x02588*/ };
 
-static utf8_progress_type_t utf8_progress_types[6] = {
-	{ 6, utf8_progress_tiles_0},
-	{ 9, utf8_progress_tiles_1},
-	{ 9, utf8_progress_tiles_2},
-	{ 5, utf8_progress_tiles_3},
-	{ 5, utf8_progress_tiles_4},
-	{13, utf8_progress_tiles_5},
+typedef struct {
+	uint8_t invert_color;
+	uint8_t chars_len;
+	char **chars;
+} utf8_progress_type_t;
+
+static utf8_progress_type_t utf8_progress_types[12] = {
+	{ 0, 6, utf8_progress_tiles_0},{ 0,  6, utf8_progress_tiles_0i},
+	{ 0, 9, utf8_progress_tiles_1},{ 1,  9, utf8_progress_tiles_1i},
+	{ 0, 9, utf8_progress_tiles_2},{ 0,  9, utf8_progress_tiles_2},
+	{ 0, 5, utf8_progress_tiles_3},{ 0,  5, utf8_progress_tiles_3},
+	{ 0, 5, utf8_progress_tiles_4},{ 1,  5, utf8_progress_tiles_4i},
+	{ 0,13, utf8_progress_tiles_5},{ 0, 13, utf8_progress_tiles_5i},
 };
 
 static uint8_t utf8_fgcolors[16] = {30, 31, 32, 33, 34, 35, 36, 37,  90,  91,  92,  93,  94,  95,  96,  97};
@@ -167,9 +201,10 @@ int utf8_progress_init(utf8_progress_t* progress, uint8_t progress_type, uint16_
 	if( ! progress ) { return -1; }
 	if( progress_type > 5 ) { return -1; }
 	if( size == 0 ) { return -1; }
-	progress->type = &(utf8_progress_types[progress_type]);
-	progress->color.use = 0;
+	progress->type = progress_type;
+	progress->invert = 0;
 	progress->size = size;
+	progress->color.use = 0;
 	progress->fp = stdout;
 	progress->range.min = 0;
 	progress->range.max = size;
@@ -186,25 +221,36 @@ int utf8_progress_set_range(utf8_progress_t* progress, uint32_t min, uint32_t ma
 }
 
 int utf8_progress_set_colors(utf8_progress_t* progress, uint8_t fgcolor, uint8_t bgcolor) {
+	if( ! progress ) { return -1; }
 	if( fgcolor > 15 ) { return -1; }
 	if( bgcolor > 15 ) { return -1; }
 	progress->color.use = 1;
-	progress->color.fg = utf8_fgcolors[fgcolor];
-	progress->color.bg = utf8_bgcolors[bgcolor];
+	progress->color.fg = fgcolor;
+	progress->color.bg = bgcolor;
+}
+
+void utf8_progress_invert(utf8_progress_t* progress) {
+	if( ! progress ) { return; }
+	progress->invert = 1 - progress->invert;
 }
 
 void utf8_progress_set_output(utf8_progress_t* progress, FILE* fp) {
+	if( ! progress ) { return; }
 	progress->fp = fp;
 }
 
 void utf8_progress_render(utf8_progress_t* progress, uint32_t value) {
-	uint32_t units_per_char = progress->type->chars_len - 1;
-	char* full_char =  progress->type->chars[units_per_char];
-	char* empty_char = progress->type->chars[0];
+	utf8_progress_type_t *ptype;
+	uint32_t units_per_char;
 	uint32_t units;
 	uint16_t char_size;
-	uint16_t i;
+	int i;
 	char* c;
+	
+	if( ! progress ) { return; }
+	
+	ptype = &(utf8_progress_types[2*progress->type+progress->invert]);
+	units_per_char = ptype->chars_len - 1;
 	
 	if( value < progress->range.min ) {
 		units = 0;
@@ -217,19 +263,37 @@ void utf8_progress_render(utf8_progress_t* progress, uint32_t value) {
 	}
 	
 	if( progress->color.use ) {
-		fprintf(progress->fp,"\x1b[%d;%dm",progress->color.fg,progress->color.bg);
+		if( !ptype->invert_color ) {
+			fprintf(progress->fp,"\x1b[%d;%dm",utf8_fgcolors[progress->color.fg],utf8_bgcolors[progress->color.bg]);
+		}
+		else {
+			fprintf(progress->fp,"\x1b[%d;%dm",utf8_fgcolors[progress->color.bg],utf8_bgcolors[progress->color.fg]);
+		}
 	}
 	
-	for( i=0; i<progress->size; i++ ) {
-		if( units >= (i+1)*units_per_char ) {
-			c = full_char;
-		} else if( units < i*units_per_char ) {
-			c = empty_char;
-		} else {
-			c = progress->type->chars[units%units_per_char];
+	if( ! progress->invert ) {
+		for( i=0; i<progress->size; i++ ) {
+			if( units >= (i+1)*units_per_char ) {
+				c = ptype->chars[units_per_char];;
+			} else if( units < i*units_per_char ) {
+				c = ptype->chars[0];
+			} else {
+				c = ptype->chars[units%units_per_char];
+			}
+			fprintf(progress->fp,"%s",c);
 		}
-		
-		fprintf(progress->fp,"%s",c);
+	}
+	else {
+		for( i=0; i<progress->size; i++ ) {
+			if( units >= (progress->size-i)*units_per_char ) {
+				c = ptype->chars[units_per_char];;
+			} else if( units < (progress->size-1-i)*units_per_char ) {
+				c = ptype->chars[0];
+			} else {
+				c = ptype->chars[units%units_per_char];
+			}
+			fprintf(progress->fp,"%s",c);
+		}
 	}
 	
 	if( progress->color.use ) {
