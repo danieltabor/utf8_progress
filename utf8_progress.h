@@ -207,7 +207,7 @@ int utf8_progress_init(utf8_progress_t* progress, uint8_t progress_type, uint16_
 	progress->color.use = 0;
 	progress->fp = stdout;
 	progress->range.min = 0;
-	progress->range.max = size;
+	progress->range.max = 100;
 	return 0;
 }
 
@@ -287,7 +287,7 @@ void utf8_progress_render(utf8_progress_t* progress, uint32_t value) {
 		for( i=0; i<progress->size; i++ ) {
 			if( units >= (progress->size-i)*units_per_char ) {
 				c = ptype->chars[units_per_char];;
-			} else if( units < (progress->size-1-i)*units_per_char ) {
+			} else if( units < (progress->size-i-1)*units_per_char ) {
 				c = ptype->chars[0];
 			} else {
 				c = ptype->chars[units%units_per_char];
